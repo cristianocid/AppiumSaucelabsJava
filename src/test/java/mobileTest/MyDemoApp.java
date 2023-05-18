@@ -8,8 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Pause;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -53,6 +59,21 @@ public class MyDemoApp {
         assertEquals("Sauce Lab Back Packs", nomeProduto.getText());
         WebElement precoProduto = driver.findElement(By.id("com.saucelabs.mydemoapp.android:id/priceTV"));
         assertEquals("$ 29.99", precoProduto.getText());
+
+        // Na tela de produto, fazer o arrasta para cima
+        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+        Sequence dragNDrop = new Sequence(finger, 1);
+        dragNDrop.addAction(finger.createPointerMove(Duration.ofMillis(0), PointerInput.Origin.viewport(), 200, 500));
+        dragNDrop.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        dragNDrop.addAction(new Pause(finger, Duration.ofMillis(600)));
+        dragNDrop.addAction(finger.createPointerMove(Duration.ofMillis(700), PointerInput.Origin.viewport(), 200, 200));
+        dragNDrop.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        driver.perform(Collections.singletonList(dragNDrop));
+
+
+        // Adicione ao Carrinho
+        // WebElement adicionarCarrinho = driver.findElement(By.id("Tap to add product to cart"));
+        // adicionarCarrinho.click();
     }
 
     @AfterEach
